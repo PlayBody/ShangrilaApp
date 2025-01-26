@@ -31,7 +31,7 @@ import 'dialog_attach_preview.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import '../../../http/webservice.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+// import 'package:gallery_saver/gallery_saver.dart';
 
 class ConnectMessage extends StatefulWidget {
   const ConnectMessage({Key? key}) : super(key: key);
@@ -466,6 +466,7 @@ class _ConnectMessage extends State<ConnectMessage> {
       if (item.status == DownloadTaskStatus.complete) {
         String tempPath = item.savedDir + '/' + item.filename!;
         File(tempPath).setLastModified(DateTime.now());
+        /* Only For iOS
         if (Platform.isIOS) {
           // String tempPath = item.savedDir + '/' + item.filename!;
           var ext = path.extension(tempPath);
@@ -476,7 +477,7 @@ class _ConnectMessage extends State<ConnectMessage> {
           if (['.mov', '.mp4', '.avi'].contains(ext.toLowerCase())) {
             await GallerySaver.saveVideo(tempPath);
           }
-        }
+        } */
         Fluttertoast.showToast(msg: 'ダウンロードされました。- ${item.filename}');
       }
 

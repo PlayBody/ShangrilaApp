@@ -57,6 +57,10 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
 
     menus = await ClMenu().loadMenuList(context, {'organ_id': widget.organId});
 
+    if (organ!.checkTicketConsumtion == 0) {
+      await checkIn();
+      return [];
+    }
     setState(() {});
     return [];
   }
@@ -83,9 +87,14 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
     // }
 
     bool conf = await Dialogs().confirmDialog(context, '入店しますか？');
-    if (!conf) return;
+    if (!conf) {
+      if (organ!.checkTicketConsumtion == 0) Navigator.pop(context);
+      return;
+    }
 
-    Dialogs().loaderDialogNormal(context);
+    if (organ!.checkTicketConsumtion > 0) {
+      Dialogs().loaderDialogNormal(context);
+    }
     for (var item in tickets) {
       await ClUser()
           .usingTicketWithCheckin(context, item.id, item.cartCount.toString());
@@ -103,7 +112,10 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
 
     globals.userRank = await ClCoupon().loadRankData(context, globals.userId);
     print(globals.userRank!.rankName);
-    Navigator.pop(context);
+
+    if (organ!.checkTicketConsumtion > 0) {
+      Navigator.pop(context);
+    }
     Navigator.pop(context);
   }
 
@@ -121,13 +133,15 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
           future: loadData,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              if (organ!.checkTicketConsumtion == 0) {
+                return Center(child: CircularProgressIndicator());
+              }
               return Container(
                   padding: EdgeInsets.symmetric(horizontal: 30),
                   child: _getMainColumn());
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
-            // By default, show a loading spinner.
             return Center(child: CircularProgressIndicator());
           },
         ));
@@ -136,7 +150,6 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
   Widget _getMainColumn() {
     return SingleChildScrollView(
         child: Column(
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: 16),
         Header3Text(label: organ!.organName),
@@ -212,7 +225,6 @@ class _ConnectCheckIn extends State<ConnectCheckIn> {
         Header4Text(label: 'チケット消費設定'),
         SizedBox(height: 8),
         ...tickets.map((e) => _getTicketRow(e)),
-        // Expanded(child: Container()),
         SizedBox(height: 48),
         if (organ!.isNoReserve == constCheckinTypeNone || selReserveId != null)
           Container(

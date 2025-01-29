@@ -119,7 +119,6 @@ class _ConnectHome extends State<ConnectHome> {
         pushMessageMake();
       }
     });
-
   }
 
   Future<void> pushMessageMake() async {
@@ -153,12 +152,11 @@ class _ConnectHome extends State<ConnectHome> {
     sites = await ClCompany().loadCompanySites(context, APPCOMANYID);
     homeMenus = await ClCommon().loadConnectHomeMenu(context);
 
-
     globals.isCart = homeMenus
         .where((element) => element.menuKey == 'connect_product')
         .isNotEmpty;
 
-    if (globals.userId != ''){
+    if (globals.userId != '') {
       isNewSale = await ClCommon().isNewSale(context, globals.userId);
     }
 
@@ -187,7 +185,7 @@ class _ConnectHome extends State<ConnectHome> {
       Navigator.push(context, MaterialPageRoute(builder: (_) {
         return ConnectCheck();
       })).then((value) {
-        if ((value != null)){
+        if ((value != null)) {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
             return ConnectCheckIn(organId: value);
           })).then((value) => loadInitData());
@@ -222,10 +220,12 @@ class _ConnectHome extends State<ConnectHome> {
         return ConnectEvent();
       }));
     if (homeMenu.menuKey == 'connect_sale')
-
       Navigator.push(context, MaterialPageRoute(builder: (_) {
         return ConnectSale(url: siteUrl + '?app_user=' + globals.userId);
-      })).then((value){isNewSale = false; setState(() {});} );
+      })).then((value) {
+        isNewSale = false;
+        setState(() {});
+      });
   }
 
   @override
@@ -377,7 +377,8 @@ class _ConnectHome extends State<ConnectHome> {
                 'RANK : ' +
                     (globals.userRank == null
                         ? ''
-                        : globals.userRank!.rankName), goldLevel),
+                        : globals.userRank!.rankName),
+                goldLevel),
           ],
         )),
         Expanded(child: Container()),
@@ -385,7 +386,9 @@ class _ConnectHome extends State<ConnectHome> {
       ]),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image:  goldLevel>0 ? AssetImage('images/card_back_gold.png') : AssetImage('images/card_back.png'),
+          image: goldLevel > 0
+              ? AssetImage('images/card_back_gold.png')
+              : AssetImage('images/card_back.png'),
           fit: BoxFit.cover,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -438,7 +441,7 @@ class _ConnectHome extends State<ConnectHome> {
         SizedBox(width: 6),
         Text(txt, style: userCommentStyle),
         SizedBox(width: 6),
-        if(userGoldLevel>0)
+        if (userGoldLevel > 0)
           Text('${userGoldLevel}', style: userCommentStyle),
       ],
     );
@@ -522,12 +525,9 @@ class _ConnectHome extends State<ConnectHome> {
 
     HomeMenuModel saleMenu =
         homeMenus.firstWhere((element) => element.menuKey == 'connect_sale');
-    return _getMenuItemContent(
-      siteMenu.title,
-      iconPath,
-      () => onTapHomeMenu(context, saleMenu, siteUrl: siteMenu.url),
-      badgeCount: 0, newBage: isNewSale
-    );
+    return _getMenuItemContent(siteMenu.title, iconPath,
+        () => onTapHomeMenu(context, saleMenu, siteUrl: siteMenu.url),
+        badgeCount: 0, newBage: isNewSale);
   }
 
   Widget _getMenuItemContent(String title, String iconPath, tapFunc,
@@ -545,8 +545,7 @@ class _ConnectHome extends State<ConnectHome> {
             Positioned(child: _getMenuTitleContainer(title)),
             if (badgeCount > 0)
               Positioned(right: 40, child: _getBadgeContainer(badgeCount)),
-            if (newBage)
-              Positioned(right: 0, child: _getBadgeNewContainer())
+            if (newBage) Positioned(right: 0, child: _getBadgeNewContainer())
           ])),
     );
   }
@@ -588,6 +587,7 @@ class _ConnectHome extends State<ConnectHome> {
           style: TextStyle(fontSize: 14, color: Colors.white)),
     );
   }
+
   Widget _getBadgeNewContainer() {
     return Container(
       alignment: Alignment.center,
@@ -595,8 +595,7 @@ class _ConnectHome extends State<ConnectHome> {
       height: 20,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20), color: Colors.red),
-      child: Text('New',
-          style: TextStyle(fontSize: 14, color: Colors.white)),
+      child: Text('New', style: TextStyle(fontSize: 14, color: Colors.white)),
     );
   }
 }

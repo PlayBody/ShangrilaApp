@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('ja'),
       debugShowCheckedModeBanner: false,
-      title: 'Form Samples',
+      title: 'Shangri-la',
       theme: ThemeData(primarySwatch: Colors.blueGrey),
       home: AppInit(), //ConnectRegister(), //AdminHome(), //AppInit(),
       routes: <String, WidgetBuilder>{
